@@ -1,0 +1,70 @@
+CREATE DATABASE quiz_app;
+USE quiz_app;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(100),
+    role VARCHAR(20)  -- 'admin' or 'user'
+);
+ 
+ INSERT INTO users(name, email, password, role)
+VALUES ('Admin', 'admin@gmail.com', 'admin123', 'admin');
+
+CREATE TABLE questions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    question VARCHAR(500),
+    option1 VARCHAR(200),
+    option2 VARCHAR(200),
+    option3 VARCHAR(200),
+    option4 VARCHAR(200),
+    answer VARCHAR(10)
+);
+
+SELECT * FROM questions;
+
+CREATE TABLE quiz (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200),
+    description VARCHAR(500),
+    total_questions INT DEFAULT 0
+);
+
+
+
+CREATE TABLE quiz_questions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    quiz_id INT,
+    question_id INT,
+    FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE,
+    FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE results (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    quiz_id INT,
+    score INT,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (quiz_id) REFERENCES quiz(id)
+);
+
+select * from quiz;
+
+SELECT quiz_id, question_id, COUNT(*) 
+FROM quiz_questions
+GROUP BY quiz_id, question_id
+HAVING COUNT(*) > 1;
+ 
+ DELETE q1
+FROM quiz_questions q1
+JOIN quiz_questions q2
+ON q1.quiz_id = q2.quiz_id
+AND q1.question_id = q2.question_id
+AND q1.id > q2.id;
+
+
+
+
